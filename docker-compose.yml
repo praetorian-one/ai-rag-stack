@@ -1,16 +1,21 @@
 version: '3.8'
 
 services:
-
+  # 🧠 Ollama: Local LLM model host
+  # - Loads GGUF or native models from ${MODEL_PATH} (NFS-mounted NAS)
+  # - Exposes API on port 11434 for local inference
   ollama:
     image: ollama/ollama
     container_name: ollama
     ports:
       - "11434:11434"
     volumes:
-      - ${MODEL_PATH}:/root/.ollama/models:ro # Set in .env
+      - ${MODEL_PATH}:/root/.ollama/models:ro  # Set in .env for NFS mount
     restart: unless-stopped
 
+  # 🧱 Qdrant: Vector database for document embeddings
+  # - Stores vectorized content from ingested documents
+  # - Accessible to RAG agent for similarity search
   qdrant:
     image: qdrant/qdrant
     container_name: qdrant
@@ -20,6 +25,9 @@ services:
       - qdrant_storage:/qdrant/storage
     restart: unless-stopped
 
+  # 🤖 RAG Agent: Core backend that connects Ollama + Qdrant
+  # - Accepts user queries and performs RAG via API
+  # - Sends queries to Ollama and fetches context from Qdrant
   rag-agent:
     build: ./rag-agent
     container_name: rag-agent
@@ -34,6 +42,9 @@ services:
       - qdrant
     restart: unless-stopped
 
+  # 📄 RAG Ingestor: Watches `./documents` and auto-ingests new files
+  # - Uses Nomic embeddings to vectorize content
+  # - Pushes vectors to Qdrant
   rag-ingestor:
     build: ./rag-ingestor
     container_name: rag-ingestor
@@ -43,6 +54,9 @@ services:
       - qdrant
     restart: unless-stopped
 
+  # 🧾 RAG Uploader: Web form for uploading files to ingest
+  # - Exposes an HTML upload page on port 8081
+  # - Files are saved to `./documents`, picked up by `rag-ingestor`
   rag-uploader:
     build: ./rag-uploader
     container_name: rag-uploader
@@ -52,6 +66,9 @@ services:
       - ./documents:/uploads
     restart: unless-stopped
 
+  # 🌐 RAG UI: React-based frontend for querying RAG stack
+  # - Web interface on port 3000
+  # - Sends API queries to `rag-agent`
   rag-ui:
     build: ./rag-ui
     container_name: rag-ui
@@ -64,5 +81,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  ollama_data:
-  qdrant_storage:
+  ollama_data:       # Local volume (currently unused — model data now on NFS)
+  qdrant_storage:    # Persistent Qdrant vector DB storage
