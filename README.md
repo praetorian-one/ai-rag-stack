@@ -50,13 +50,13 @@ MODEL_PATH=/mnt/curia/ai/models
 On the Docker host, edit `/etc/fstab`:
 
 ```fstab
-NAS_IP:/exported/path/to/models /mnt/curia/ai/models nfs defaults,_netdev 0 0
+NAS_IP:/exported/path/to/models /mnt/your-folder nfs defaults,_netdev 0 0
 ```
 
 Then mount:
 
 ```bash
-sudo mkdir -p /mnt/curia/ai/models
+sudo mkdir -p /mnt/your-folder
 sudo mount -a
 ```
 
