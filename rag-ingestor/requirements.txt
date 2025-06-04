@@ -1,0 +1,6 @@
+watchdog==3.0.0
+qdrant-client==1.7.0
+nomic==3.0.12
+python-dotenv==1.0.1
+
+
