@@ -38,7 +38,7 @@ Create a `.env` file in the root directory:
 
 ```env
 # NAS-mounted model directory (auto-mounted via fstab)
-MODEL_PATH=/mnt/curia/ai/models
+MODEL_PATH=/mnt/your-folder
 ```
 
 ---
