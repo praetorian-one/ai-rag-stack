@@ -1,0 +1,21 @@
+# Core FastAPI server
+fastapi
+uvicorn
+
+# Cross-origin requests
+python-multipart
+requests
+
+# Qdrant client
+qdrant-client
+
+# Embeddings (nomic)
+sentence-transformers
+
+# Pydantic validation
+pydantic
+
+# Load environment variables
+python-dotenv
+
+
